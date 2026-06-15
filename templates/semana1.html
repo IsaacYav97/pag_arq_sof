@@ -1,0 +1,46 @@
+<div class="seccion-semana active">
+    <h1>Semana 1: Pilares de la Arquitectura de Software</h1>
+    <p class="introduccion">La "programación" es poner los ladrillos. La "Arquitectura" es decidir si el edificio será un <strong>hospital</strong> (alta disponibilidad), una <strong>discoteca</strong> (escalabilidad) o una <strong>casa</strong> (costo). Son las decisiones difíciles de cambiar a futuro.</p>
+
+    <h2>📚 Conceptos Críticos (Atributos de Calidad)</h2>
+    <div class="grid-tarjetas">
+        <div class="tarjeta-concepto">
+            <h3>🟢 Disponibilidad</h3>
+            <p>Porcentaje de tiempo que el sistema está vivo. Se logra eliminando <strong>SPOFs (Puntos Únicos de Fallo)</strong> mediante redundancia y balanceadores de carga.</p>
+        </div>
+        <div class="tarjeta-concepto">
+            <h3>📈 Escalabilidad</h3>
+            <p>Capacidad de manejar más carga. <strong>Vertical:</strong> Más RAM/CPU a un servidor (caro, con límite). <strong>Horizontal:</strong> Más servidores pequeños (infinito, requiere software distribuido).</p>
+        </div>
+        <div class="tarjeta-concepto">
+            <h3>🥊 Resiliencia</h3>
+            <p><strong>Analogía del Boxeador:</strong> Capacidad de recibir un golpe (fallo) y recuperarse rápido. Utiliza patrones como <em>Circuit Breaker</em> y <em>Retry</em>.</p>
+        </div>
+        <div class="tarjeta-concepto">
+            <h3>🗿 Durabilidad</h3>
+            <p><strong>Grabado en piedra:</strong> Asegurar que los datos no se pierdan si el servidor explota. También se refiere a la longevidad del código (que envejezca bien 5 o 10 años).</p>
+        </div>
+    </div>
+
+    <div class="alerta trade-off">
+        <strong>⚠️ La Regla de Oro: El "Trade-off" (Sacrificio)</strong><br>
+        Un arquitecto es un negociador. No existe el software perfecto (infinitamente rápido, 100% seguro y gratis). <em>Para ganar algo, siempre hay que sacrificar otra cosa</em>.
+    </div>
+
+    <h2>🧠 Simulador de Reactivos (Autoevaluación)</h2>
+    <details class="reactivo">
+        <summary><strong>Debate 1:</strong> ¿Qué es peor en un banco? ¿Que la app no abra por 5 minutos o que se pierda el registro de un depósito de $500?</summary>
+        <div class="respuesta">
+            <p><strong>Respuesta:</strong> Es mucho peor perder el registro del depósito de $500 (Falla de <strong>Durabilidad</strong>).</p>
+            <p><em>Justificación:</em> Una caída de 5 minutos molesta al usuario, pero la pérdida de dinero destruye la confianza y trae demandas legales. En finanzas, la durabilidad siempre gana.</p>
+        </div>
+    </details>
+
+    <details class="reactivo">
+        <summary><strong>Debate 2:</strong> En una arquitectura con 3 servidores web, un balanceador de carga y 1 sola base de datos sin replicar. ¿Qué atributo está en riesgo principal?</summary>
+        <div class="respuesta">
+            <p><strong>Respuesta:</strong> La <strong>Disponibilidad</strong>.</p>
+            <p><em>Justificación:</em> Esa base de datos única representa un <strong>SPOF (Single Point of Failure)</strong>. Si esa BD se apaga, los 3 servidores web quedan inútiles.</p>
+        </div>
+    </details>
+</div>

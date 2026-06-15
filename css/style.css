@@ -1,0 +1,75 @@
+/* css/style.css */
+
+:root {
+    --bg-principal: #f4f6f9;
+    --bg-sidebar: #1e293b;
+    --texto-sidebar: #ffffff;
+    --bg-contenido: #ffffff;
+    --texto-principal: #334155;
+    --color-primario: #3b82f6;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-principal);
+    color: var(--texto-principal);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Estilos del Sidebar */
+.sidebar {
+    width: 260px;
+    background-color: var(--bg-sidebar);
+    color: var(--texto-sidebar);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    height: 100vh;
+}
+
+.sidebar h2 {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    text-align: center;
+    border-bottom: 1px solid #475569;
+    padding-bottom: 15px;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+}
+
+.menu-btn:hover,
+.menu-btn.active {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+/* Estilos del Área de Contenido */
+.contenido-principal {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    background-color: var(--bg-contenido);
+}
+
+.seccion-semana {
+    display: none;
+}
+
+.seccion-semana.active {
+    display: block;
+}
