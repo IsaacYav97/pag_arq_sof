@@ -1,0 +1,121 @@
+<div class="seccion-semana active">
+    <h1>Semana 3: Estilos Estructurales y Clásicos</h1>
+    <p class="introduccion">Organizando la complejidad mediante niveles de abstracción. Los estilos estructurales definen cómo se dividen los componentes principales de un sistema y cómo se comunican entre sí.</p>
+
+    <h2>🏗️ Los 3 Estilos Clásicos</h2>
+    <div class="grid-tarjetas">
+        <div class="tarjeta-concepto">
+            <h3>🥞 Arquitectura en Capas (N-Tier)</h3>
+            <p>El estándar de la industria. Organiza el sistema en responsabilidades horizontales (Presentación, Negocio, Datos).</p>
+            <ul>
+                <li><strong>Ventaja:</strong> Alta mantenibilidad y seguridad por aislamiento.</li>
+                <li><strong>Trade-off:</strong> Riesgo de <em>"Sinkhole Pattern"</em> (peticiones que atraviesan capas sin hacer nada, afectando el rendimiento).</li>
+            </ul>
+        </div>
+        <div class="tarjeta-concepto">
+            <h3>🧩 Microkernel (Plug-ins)</h3>
+            <p>Sistemas evolutivos. Un núcleo central (Core) mínimo, rodeado de módulos independientes que añaden funciones.</p>
+            <ul>
+                <li><strong>Ventaja:</strong> Flexibilidad extrema (ej. VS Code, Navegadores web).</li>
+                <li><strong>Trade-off:</strong> Complejidad al gestionar versiones y dependencias de los plug-ins.</li>
+            </ul>
+        </div>
+        <div class="tarjeta-concepto">
+            <h3>🧠 Pizarra (Blackboard)</h3>
+            <p>Inteligencia colectiva. Varios "Sistemas Expertos" miran una pizarra común y actúan cuando ven datos que saben resolver.</p>
+            <ul>
+                <li><strong>Ventaja:</strong> Ideal para IA y problemas no deterministas.</li>
+                <li><strong>Trade-off:</strong> Comportamiento difícil de predecir y testear.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>📊 Comparativa de Estilos</h2>
+    <div class="contenedor-tabla">
+        <table class="tabla-arquitectura">
+            <thead>
+                <tr>
+                    <th>Estilo</th>
+                    <th>Pilar de Calidad</th>
+                    <th>Caso de Uso Ideal</th>
+                    <th>Dificultad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Capas</strong></td>
+                    <td>Mantenibilidad</td>
+                    <td>Apps Empresariales / CRUDs</td>
+                    <td><span class="badge baja">Baja</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Microkernel</strong></td>
+                    <td>Flexibilidad</td>
+                    <td>IDEs, Navegadores, Editores</td>
+                    <td><span class="badge media">Media</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Pizarra</strong></td>
+                    <td>Fiabilidad (IA)</td>
+                    <td>Sistemas de Diagnóstico / IA</td>
+                    <td><span class="badge alta">Alta</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>💻 Laboratorio: Patrón Microkernel en Python</h2>
+    <p>Observa cómo el <code>CoreSystem</code> no sabe nada sobre procesar pagos, simplemente expone una forma de registrar <code>Plugins</code>. Esto permite agregar "Pago con Cripto" mañana sin modificar el núcleo.</p>
+
+    <div class="editor-codigo">
+        <div class="editor-header">
+            <span class="dot rojo"></span>
+            <span class="dot amarillo"></span>
+            <span class="dot verde"></span>
+            <span class="archivo-nombre">microkernel.py</span>
+        </div>
+        <pre><code class="lenguaje-python">
+<span class="comentario"># 1. CORE SYSTEM (El Núcleo)</span>
+<span class="keyword">class</span> <span class="clase">CoreECommerce</span>:
+    <span class="keyword">def</span> <span class="funcion">__init__</span>(<span class="variable">self</span>):
+        <span class="variable">self</span>.plugins_pago = {}
+
+    <span class="keyword">def</span> <span class="funcion">registrar_plugin</span>(<span class="variable">self</span>, nombre, plugin):
+        <span class="variable">self</span>.plugins_pago[nombre] = plugin
+        <span class="built-in">print</span>(<span class="string">f"[*] Plugin '{nombre}' registrado exitosamente."</span>)
+
+    <span class="keyword">def</span> <span class="funcion">procesar_checkout</span>(<span class="variable">self</span>, metodo, monto):
+        <span class="keyword">if</span> metodo <span class="keyword">in</span> <span class="variable">self</span>.plugins_pago:
+            <span class="variable">self</span>.plugins_pago[metodo].pagar(monto)
+        <span class="keyword">else</span>:
+            <span class="built-in">print</span>(<span class="string">f"[!] Error: Método de pago '{metodo}' no soportado."</span>)
+
+<span class="comentario"># 2. PLUG-INS (Funcionalidades extensibles)</span>
+<span class="keyword">class</span> <span class="clase">PluginPayPal</span>:
+    <span class="keyword">def</span> <span class="funcion">pagar</span>(<span class="variable">self</span>, monto):
+        <span class="built-in">print</span>(<span class="string">f"$$$ Procesando ${monto} a través de la API de PayPal."</span>)
+
+<span class="keyword">class</span> <span class="clase">PluginStripe</span>:
+    <span class="keyword">def</span> <span class="funcion">pagar</span>(<span class="variable">self</span>, monto):
+        <span class="built-in">print</span>(<span class="string">f"$$$ Procesando ${monto} con tarjeta de crédito vía Stripe."</span>)
+
+<span class="comentario"># 3. EJECUCIÓN (Conectando las piezas)</span>
+app = CoreECommerce()
+app.registrar_plugin(<span class="string">"paypal"</span>, PluginPayPal())
+app.registrar_plugin(<span class="string">"stripe"</span>, PluginStripe())
+
+<span class="built-in">print</span>(<span class="string">"\n--- Iniciando Compras ---"</span>)
+app.procesar_checkout(<span class="string">"paypal"</span>, <span class="numero">150.00</span>)
+app.procesar_checkout(<span class="string">"cripto"</span>, <span class="numero">500.00</span>) <span class="comentario"># Este fallará porque no hay plugin</span>
+        </code></pre>
+        <div class="consola-salida">
+            <strong>Terminal Output:</strong><br>
+            [*] Plugin 'paypal' registrado exitosamente.<br>
+            [*] Plugin 'stripe' registrado exitosamente.<br>
+            <br>
+            --- Iniciando Compras ---<br>
+            $$$ Procesando $150.0 a través de la API de PayPal.<br>
+            <span style="color: #ef4444;">[!] Error: Método de pago 'cripto' no soportado.</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="seccion-semana active">
+    <h1>Semana 2: Documentación Arquitectónica (ADRs)</h1>
+    <p class="introduccion"><strong>"Code tells you HOW. Comments tell you WHAT. Documentation tells you WHY."</strong><br>La documentación no es burocracia, es infraestructura de conocimiento compartido. Evita que el equipo futuro se pregunte: <em>"¿Por qué demonios hicieron esto así?"</em>.</p>
+
+    <h2>📚 La Filosofía de la Documentación</h2>
+    <div class="grid-tarjetas">
+        <div class="tarjeta-concepto">
+            <h3>🎯 ¿Qué captura un ADR?</h3>
+            <p>Un <strong>Architecture Decision Record</strong> captura el problema (Contexto), la solución elegida (Decisión) y los trade-offs aceptados (Consecuencias). Evita la pérdida de memoria institucional.</p>
+        </div>
+        <div class="tarjeta-concepto">
+            <h3>👥 ¿Para quién es?</h3>
+            <ul>
+                <li><strong>Devs:</strong> Para saber cómo implementar.</li>
+                <li><strong>QA:</strong> Para saber qué probar.</li>
+                <li><strong>Nuevos:</strong> Para el <em>Onboarding</em> rápido.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>📝 Anatomía de un ADR Perfecto</h2>
+    <div class="adr-formato">
+        <div class="adr-seccion">
+            <span class="adr-badge">1. Contexto</span>
+            <p>Las fuerzas en juego. ¿Qué problema técnico o de negocio intentamos resolver? ¿Qué restricciones tenemos (tiempo, dinero, escalabilidad)?</p>
+        </div>
+        <div class="adr-seccion">
+            <span class="adr-badge decisivo">2. Decisión</span>
+            <p>La tecnología o patrón elegido de forma clara y accionable. Justificada con razones técnicas frente a las alternativas descartadas.</p>
+        </div>
+        <div class="adr-seccion">
+            <span class="adr-badge">3. Consecuencias</span>
+            <p>Lo bueno y lo malo. ¿Qué deuda técnica asumimos? ¿Qué mitigaciones planeamos? (Recuerda la regla del Trade-off).</p>
+        </div>
+    </div>
+
+    <h2>🛠️ Laboratorio Interactivo: Redactando tu primer ADR</h2>
+    <p>Basado en el ejercicio práctico de la clase. Lee el escenario y piensa qué pondrías en cada sección antes de revelar la respuesta del arquitecto.</p>
+
+    <div class="alerta">
+        <strong>Escenario del Proyecto:</strong> Tu equipo está construyendo el nuevo catálogo de productos del Yavirac. Necesitan una base de datos. Los productos tienen estructuras muy diferentes (unos tienen talla, otros tienen peso, otros tienen voltaje) y el catálogo cambia constantemente. Tienen que decidir entre <strong>MySQL (Relacional)</strong> y <strong>MongoDB (NoSQL)</strong>.
+    </div>
+
+    <details class="reactivo">
+        <summary><strong>Ver ADR Propuesto: Elección de Base de Datos para Catálogo</strong></summary>
+        <div class="respuesta">
+            <div class="adr-real">
+                <h4>[ADR-001] Uso de MongoDB para el Catálogo de Productos</h4>
+                <p><strong>Estado:</strong> Aceptado | <strong>Fecha:</strong> Hoy</p>
+                
+                <h5>1. Contexto</h5>
+                <p>El catálogo de productos requiere almacenar ítems con atributos altamente variables. Un esquema rígido en SQL nos obligaría a hacer migraciones constantes de tablas o usar patrones complejos (Entity-Attribute-Value) que penalizan el rendimiento de lectura.</p>
+                
+                <h5>2. Decisión</h5>
+                <p>Hemos decidido utilizar <strong>MongoDB</strong> (Base de datos NoSQL orientada a documentos). Descartamos MySQL porque la flexibilidad del esquema JSON nos permite insertar nuevos tipos de productos sin alterar la estructura de la base de datos.</p>
+                
+                <h5>3. Consecuencias</h5>
+                <ul>
+                    <li><strong>Positivas:</strong> Alta flexibilidad (Escalabilidad de negocio). Tiempo de desarrollo más rápido para nuevos productos.</li>
+                    <li><strong>Negativas (Trade-offs):</strong> Perdemos las transacciones ACID fuertes (Fiabilidad) y las uniones complejas (JOINs) nativas de SQL. Los desarrolladores deberán garantizar la integridad de los datos a nivel de aplicación.</li>
+                </ul>
+            </div>
+        </div>
+    </details>
+</div>

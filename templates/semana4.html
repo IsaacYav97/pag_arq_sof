@@ -1,0 +1,87 @@
+<div class="seccion-semana active">
+    <h1>Semana 4: Arquitecturas Distribuidas y Observabilidad</h1>
+    <p class="introduccion">El salto del monolito a la red. Cuando los sistemas crecen exponencialmente, la comunicación y la visibilidad se vuelven el problema principal. Pasamos de tener un "edificio gigante" a una "ciudad de edificios interconectados".</p>
+
+    <h2>🌐 Conceptos Clave</h2>
+    <div class="grid-tarjetas">
+        <div class="tarjeta-concepto">
+            <h3>🧩 Microservicios</h3>
+            <p><strong>Descomposición Funcional:</strong> Cada servicio tiene un solo dominio (Bounded Context) para reducir el radio de explosión ante fallos.<br><strong>Despliegue Independiente:</strong> Permite subir a producción el servicio de "Pagos" sin esperar al equipo de "Catálogo".</p>
+        </div>
+        <div class="tarjeta-concepto">
+            <h3>👁️ Observabilidad</h3>
+            <p>No es solo monitoreo. Es entender el estado interno de un sistema distribuido basándose en sus salidas externas.<br><strong>Ecosistema:</strong> Prometheus (Métricas), ELK (Logs), Jaeger (Trazas Distribuidas).</p>
+        </div>
+        <div class="tarjeta-concepto">
+            <h3>📜 Datos Distribuidos</h3>
+            <p><strong>Database-per-service:</strong> Nunca compartir bases de datos entre servicios para evitar acoplamiento oculto.<br><strong>CQRS:</strong> Separar las consultas (lectura) de los comandos (escritura).</p>
+        </div>
+    </div>
+
+    
+
+    <h2>⚖️ Gestión de Datos: 2PC vs SAGA</h2>
+    <div class="contenedor-tabla">
+        <table class="tabla-arquitectura">
+            <thead>
+                <tr>
+                    <th>Característica</th>
+                    <th>2-Phase Commit (2PC)</th>
+                    <th>Patrón SAGA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Consistencia</strong></td>
+                    <td>Fuerte (Atómica)</td>
+                    <td>Eventual</td>
+                </tr>
+                <tr>
+                    <td><strong>Rendimiento / Escalabilidad</strong></td>
+                    <td><span class="badge alta">Baja</span> (Bloquea recursos)</td>
+                    <td><span class="badge baja">Alta</span> (Operaciones Asíncronas)</td>
+                </tr>
+                <tr>
+                    <td><strong>Manejo de Fallos</strong></td>
+                    <td>Rollback automático de DB</td>
+                    <td><strong>Transacción Compensatoria</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>⚙️ Laboratorio Teórico: Transacciones Compensatorias</h2>
+    <p>En un sistema distribuido (E-commerce), si el último paso falla, no puedes hacer un "Rollback" mágico en SQL porque los pasos anteriores ocurrieron en bases de datos distintas. SAGA resuelve esto.</p>
+    
+    <details class="reactivo">
+        <summary><strong>Ver Flujo de Fallo SAGA (Compra de Laptop)</strong></summary>
+        <div class="respuesta">
+            <ul style="line-height: 1.8;">
+                <li>✅ <strong>Paso 1 (Servicio de Inventario):</strong> Reserva 1 Laptop HP en la base de datos de inventario.</li>
+                <li>✅ <strong>Paso 2 (Servicio de Pagos):</strong> Cobra $800 a la tarjeta a través del procesador de pagos.</li>
+                <li>❌ <strong>Paso 3 (Servicio de Envíos):</strong> Falla porque el código postal ingresado no tiene cobertura.</li>
+                <li>🔄 <strong>SAGA ACTIVA LA COMPENSACIÓN (Hacia atrás):</strong>
+                    <ul>
+                        <li><span style="color: #ea580c; font-weight: bold;">Compensar Paso 2:</span> El sistema llama a la API del banco para emitir un reembolso de $800 al usuario.</li>
+                        <li><span style="color: #ea580c; font-weight: bold;">Compensar Paso 1:</span> El sistema devuelve la Laptop HP al inventario disponible.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </details>
+
+    <h2>📊 Laboratorio Python: Instrumentación con Prometheus</h2>
+    <p>¿Cómo sabe nuestro dashboard (como Grafana) cuántas transacciones SAGA han fallado hoy? Los microservicios deben "exponer" métricas en un puerto específico para que Prometheus las recolecte (Scraping).</p>
+    
+    <div class="editor-codigo">
+        <div class="editor-header">
+            <span class="dot rojo"></span>
+            <span class="dot amarillo"></span>
+            <span class="dot verde"></span>
+            <span class="archivo-nombre">instrumentacion_saga.py</span>
+        </div>
+        <pre><code class="lenguaje-python">
+<span class="keyword">from</span> prometheus_client <span class="keyword">import</span> Counter, start_http_server
+
+<span class="comentario"># 1. Definimos una métrica tipo "Contador" para Prometheus</span>
+FALLOS_SAGA = Counter(<span class="string">'ecommerce_saga_fallos_total'</span>, <span class="string">'Total de compensaciones S
