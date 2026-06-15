@@ -19,8 +19,15 @@ body {
     overflow: hidden;
 }
 
-/* Estilos del Sidebar */
+/* =========================================
+   SIDEBAR (MENÚ LATERAL FLOTANTE)
+   ========================================= */
 .sidebar {
+    position: fixed;
+    /* 👈 Convertido en flotante: Ya no empuja al contenido principal */
+    top: 0;
+    left: -260px;
+    /* 👈 Inicia oculto a la izquierda por defecto */
     width: 260px;
     background-color: var(--bg-sidebar);
     color: var(--texto-sidebar);
@@ -29,6 +36,10 @@ body {
     padding: 20px;
     box-sizing: border-box;
     height: 100vh;
+    z-index: 999;
+    /* Se sitúa por encima del contenido */
+    transition: left 0.3s ease-in-out;
+    /* Animación de deslizamiento suave */
 }
 
 .sidebar h2 {
@@ -58,10 +69,13 @@ body {
     color: white;
 }
 
-/* Estilos del Área de Contenido */
+/* =========================================
+   ÁREA DE CONTENIDO PRINCIPAL
+   ========================================= */
 .contenido-principal {
     flex: 1;
-    padding: 40px;
+    /* 👈 Un colchón de 90px a la izquierda para que el botón estático no tape los títulos */
+    padding: 40px 40px 40px 90px;
     overflow-y: auto;
     background-color: var(--bg-contenido);
 }
@@ -77,7 +91,6 @@ body {
 /* =========================================
    ESTILOS ESPECÍFICOS - SEMANA 2 (ADRs)
    ========================================= */
-
 .adr-formato {
     background-color: #ffffff;
     border: 1px solid #cbd5e1;
@@ -135,8 +148,6 @@ body {
 /* =========================================
    ESTILOS ESPECÍFICOS - SEMANA 3 (Estilos y Código)
    ========================================= */
-
-/* Estilos de la Tabla Comparativa */
 .contenedor-tabla {
     overflow-x: auto;
     margin-bottom: 40px;
@@ -186,7 +197,6 @@ body {
     color: #991b1b;
 }
 
-/* Estilos del Editor de Código (Simulación) */
 .editor-codigo {
     background-color: #1e1e1e;
     border-radius: 8px;
@@ -240,10 +250,8 @@ body {
     font-size: 0.95rem;
     line-height: 1.5;
     color: #d4d4d4;
-    /* Color base texto */
 }
 
-/* Syntax Highlighting Simulado */
 .keyword {
     color: #569cd6;
     font-weight: bold;
@@ -285,4 +293,45 @@ body {
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.9rem;
     border-top: 1px dashed #404040;
+}
+
+/* ==========================================================
+   🍔 INTERFAZ DE CAPA FLOTANTE INMÓVIL (OVERLAY SYSTEM)
+   ========================================================== */
+
+/* El botón ahora se queda 100% quieto en la esquina superior izquierda siempre */
+.btn-hamburguesa {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+    /* Por encima de la barra lateral (999) */
+    background-color: var(--bg-sidebar);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s;
+}
+
+.btn-hamburguesa:hover {
+    background-color: var(--color-primario);
+}
+
+/* Cuando abres el menú, la barra entra de izquierda a derecha SIN mover el fondo */
+body.menu-activo .sidebar {
+    left: 0;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.3);
+    /* Sombra elegante sobre el contenido */
+}
+
+/* 📱 Ajuste adaptativo para pantallas muy pequeñas (Celulares) */
+@media (max-width: 768px) {
+    .contenido-principal {
+        /* En celulares, es mejor bajar el texto un poco para que el botón respire arriba */
+        padding: 80px 20px 20px 20px;
+    }
 }
