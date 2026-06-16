@@ -1,0 +1,96 @@
+<!-- templates/semana5.html -->
+<div class="seccion-semana active">
+    <h1>Semana 5: Arquitectura Reactiva y Evolutiva</h1>
+    <p>Estilos III: Sistemas que reaccionan en tiempo real y están diseñados para el cambio constante.</p>
+
+    <div class="adr-formato">
+        <h3>⚡ Arquitectura Orientada a Eventos (EDA)</h3>
+        <p>Sistemas que reaccionan a cambios de estado en tiempo real en lugar de depender de peticiones directas.</p>
+    
+        <div class="adr-seccion">
+            <h4>El Modelo Pub/Sub</h4>
+            <ul>
+                <li><strong>Productores:</strong> Generan el evento.</li>
+                <li><strong>Canales:</strong> Brokers intermediarios como Kafka o RabbitMQ.</li>
+                <li><strong>Consumidores:</strong> Reaccionan al evento.</li>
+            </ul>
+        </div>
+    
+        <div class="adr-seccion">
+            <h4>Beneficios y Desafíos</h4>
+            <ul>
+                <li><span class="badge baja">Ventaja</span> Máximo desacoplamiento. Los servicios no necesitan conocerse entre sí.</li>
+                <li><span class="badge alta">Reto</span> La trazabilidad se vuelve compleja. Requiere patrones como <strong>Saga</strong> para mantener la consistencia en la transaccionalidad distribuida.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="adr-formato">
+        <h3>⚖️ Patrón CQRS</h3>
+        <p>Command Query Responsibility Segregation propone usar modelos distintos para actualizar información y para consultarla.</p>
+    
+        <div class="adr-seccion">
+            <h4>Separación de Responsabilidades</h4>
+            <ul>
+                <li><span class="badge alta">Commands</span> Tareas específicas de negocio que alteran el estado (Ej: "Reservar Habitación").</li>
+                <li><span class="badge baja">Queries</span> Consultas optimizadas que devuelven DTOs sin lógica de dominio.</li>
+            </ul>
+        </div>
+    
+        <div class="adr-real">
+            <h4>¿Por qué implementarlo?</h4>
+            <p>Las lecturas suelen ser <strong>100x más frecuentes</strong> que las escrituras. Al separar responsabilidades, logras un escalado independiente, modelos de lectura desnormalizados para máxima velocidad y un control estricto de seguridad.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="adr-formato">
+        <h3>🧬 Arquitectura Evolutiva</h3>
+        <p>El software no es estático. Se enfoca en la "Evolutividad" como una característica arquitectónica de primer nivel, evitando la rigidez del diseño inicial.</p>
+    
+        <div class="adr-seccion">
+            <h4>Fitness Functions (Funciones de Aptitud)</h4>
+            <p>Son los guardianes del diseño. Métricas objetivas que evalúan qué tan cerca está la arquitectura de sus objetivos:</p>
+            <p>$$f(a) \rightarrow [0, 1]$$</p>
+            <p>Se integran en el pipeline de CI/CD para detectar desviaciones en rendimiento, seguridad o deuda técnica automáticamente.</p>
+        </div>
+    </div>
+
+    <h3>💻 Laboratorio: Event-Bus en Python</h3>
+    <p>Simularemos un sistema donde una orden de compra dispara eventos a Inventario y Notificaciones sin llamadas directas.</p>
+
+    <div class="editor-codigo">
+        <div class="editor-header">
+            <div class="dot rojo"></div>
+            <div class="dot amarillo"></div>
+            <div class="dot verde"></div>
+            <span class="archivo-nombre">event_bus.py</span>
+        </div>
+        <pre><code><span class="keyword">class</span> <span class="clase">EventBus</span>:
+        <span class="keyword">def</span> <span class="funcion">__init__</span>(<span class="variable">self</span>):
+            <span class="variable">self</span>.subscribers = {}
+
+        <span class="keyword">def</span> <span class="funcion">subscribe</span>(<span class="variable">self</span>, <span class="variable">event_type</span>, <span class="variable">callback</span>):
+            <span class="keyword">if</span> <span class="variable">event_type</span> <span class="keyword">not in</span> <span class="variable">self</span>.subscribers:
+                <span class="variable">self</span>.subscribers[<span class="variable">event_type</span>] = []
+            <span class="variable">self</span>.subscribers[<span class="variable">event_type</span>].append(<span class="variable">callback</span>)
+
+        <span class="keyword">def</span> <span class="funcion">publish</span>(<span class="variable">self</span>, <span class="variable">event_type</span>, <span class="variable">data</span>):
+            <span class="keyword">if</span> <span class="variable">event_type</span> <span class="keyword">in</span> <span class="variable">self</span>.subscribers:
+                <span class="keyword">for</span> <span class="variable">callback</span> <span class="keyword">in</span> <span class="variable">self</span>.subscribers[<span class="variable">event_type</span>]:
+                    <span class="funcion">callback</span>(<span class="variable">data</span>)
+
+    <span class="comentario"># --- Uso del Event Bus ---</span>
+    <span class="variable">bus</span> = <span class="clase">EventBus</span>()
+
+    <span class="keyword">def</span> <span class="funcion">notificar_inventario</span>(<span class="variable">data</span>):
+        <span class="built-in">print</span>(<span class="string">f"📦 Inventario actualizado para: {data['item']}"</span>)
+
+    <span class="variable">bus</span>.<span class="funcion">subscribe</span>(<span class="string">"orden_creada"</span>, <span class="variable">notificar_inventario</span>)
+
+    <span class="comentario"># Emitiendo el evento asíncrono</span>
+    <span class="variable">bus</span>.<span class="funcion">publish</span>(<span class="string">"orden_creada"</span>, {<span class="string">"item"</span>: <span class="string">"Laptop"</span>, <span class="string">"qty"</span>: <span class="numero">1</span>}) <span class="comentario"></span></code></pre>
+        <div class="consola-salida">
+            > 📦 Inventario actualizado para: Laptop
+        </div>
+    </div>
